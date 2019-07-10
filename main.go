@@ -1,6 +1,7 @@
 package main
 
 import (
+	"time"
 	"log"
 	"net/http"
 	"os"
@@ -19,7 +20,6 @@ var (
 )
 
 func init() {
-		
 	Port = os.Getenv("PORT")
 	if Port == "" {
 		log.Fatal("Port is not set.")
@@ -41,7 +41,6 @@ func init() {
 }
 
 func main() {
-
 	counterSafe := counter.New(MaxCounter)
 	router := handlers.Router(counterSafe)
 
@@ -52,12 +51,19 @@ func main() {
 		Addr:    ":" + Port,
 		Handler: router,
 	}
-
+	
 	go func() {
 		log.Fatal(srv.ListenAndServe())
 	}()
-	
+		
+	gracefullShutdown(srv, interrupt)
+
+	log.Println("Server shutdown")
+}
+
+func gracefullShutdown(srv *http.Server, interrupt <-chan os.Signal) {
 	killSignal := <-interrupt
+	log.Print("The service is shutting down...")
 	switch killSignal {
 		case os.Kill:
 			log.Print("Got SIGKILL...")
@@ -66,8 +72,10 @@ func main() {
 		case syscall.SIGTERM:
 			log.Print("Got SIGTERM...")
 	}
-
-	log.Print("The service is shutting down...")
-	srv.Shutdown(context.Background())
-	log.Print("Done")
+	
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	if err := srv.Shutdown(ctx); err != nil {
+		log.Println("Failed to gracefully shutdown:", err)
+	}
 }

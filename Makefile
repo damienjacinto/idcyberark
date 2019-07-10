@@ -6,6 +6,8 @@ BUILD_TIME?=$(shell date -u '+%Y-%m-%d_%H:%M:%S')
 GOBIN?=$(GOPATH)/bin
 CONTAINER_IMAGE?=docker.io/damienjacinto/${GONAME}
 
+.PHONY: clean test
+
 clean:
 	rm -f ${GOBIN}/${GONAME}
 

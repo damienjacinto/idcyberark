@@ -6,12 +6,11 @@ import (
 	"net/http/httptest"
 	"testing"
 	"idcyberark/counter"
-	"github.com/gorilla/mux"
 )
 
 func TestIdcyberark(t *testing.T) {
 	request, _ := http.NewRequest("GET", "/id/jenkins", nil)
-	c := counter.New()
+	c := counter.New(counter.MaxCounter)
 	w := httptest.NewRecorder()
 	id := idcyberark(c)
 	id(w, request)
@@ -22,7 +21,7 @@ func TestIdcyberark(t *testing.T) {
 		t.Errorf("Status code is wrong. Have: %d, want: %d.", have, want)
 	}	
 
-	if have, want := string(body), "1"; have != want {
+	if have, want := string(body), "{\"id\":1}"; have != want {
 		t.Errorf("Result call /id/{jenkins} failed. Have: %s, want: %s.", have, want)
 	}
 	

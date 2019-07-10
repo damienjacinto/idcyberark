@@ -4,11 +4,11 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"../counter"
+	"idcyberark/counter"
 )
 
 func TestRouter(t *testing.T) {
-	c := counter.New()
+	c := counter.New(counter.MaxCounter)
 	r := Router(c)
 	ts := httptest.NewServer(r)
 	defer ts.Close()
