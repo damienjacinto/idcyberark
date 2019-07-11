@@ -18,6 +18,7 @@ RUN CGO_ENABLED=0 go build \
 
 FROM scratch
 ENV PORT 8000
+ENV MAXCOUNTER 0
 EXPOSE $PORT
 COPY --from=build /bin/app /app
 

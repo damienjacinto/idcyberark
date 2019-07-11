@@ -33,7 +33,7 @@ func init() {
 	MaxCounter = counter.MaxCounter
 	maxCounterEnv := os.Getenv("MAXCOUNTER")
 	maxCounterInt, err := strconv.Atoi(maxCounterEnv)
-	if err == nil {
+	if (err == nil && maxCounterInt > 0) {
 		MaxCounter = maxCounterInt
 	}
 

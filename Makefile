@@ -4,9 +4,25 @@ RELEASE?=0.0.1
 COMMIT?=$(shell git rev-parse --short HEAD)
 BUILD_TIME?=$(shell date -u '+%Y-%m-%d_%H:%M:%S')
 GOBIN?=$(GOPATH)/bin
-CONTAINER_IMAGE?=docker.io/damienjacinto/${GONAME}
+CONTAINER_IMAGE?=jacintod/${GONAME}
 
-.PHONY: clean test
+.PHONY: clean test help
+
+help:
+	@ echo
+	@ echo '  Usage:'
+	@ echo ''
+	@ echo '    make <target>'
+	@ echo ''
+	@ echo '  Targets:'
+	@ echo ''
+	@ echo '    clean       Remove $(GOBIN)/$(GONAME)'
+	@ echo '    build       Build app in $(GOBIN)'
+	@ echo '    run         Run app on port: $(PORT) - check $$(PORT)'
+	@ echo '    test        Launch test'
+	@ echo '    container   Build the docker image'
+	@ echo '    drun        Run docker image on binded port: $(PORT) - check $$(PORT)'
+	@ echo ''
 
 clean:
 	rm -f ${GOBIN}/${GONAME}
