@@ -1,14 +1,14 @@
 # Overview
 
 Cyberark offer an API with PAM to request hosts data in the safe (host type, user, pwd).
-To request informations you need a credential and a unique idconnexion (Number between 1 and 100).
+To request information you need a credential and a unique idconnexion (Number between 1 and 100).
 The request lasts around 1 to 5 seconds, during this time any request with the same credential and idconnexion locks the account for 15 minutes.
 
-The goal of this projet is to handle unique idconnection number for each request.
-The request to the cyberark's api is launch from a pod that run on Jenkins inside our OpenShift.
-Each instance of Jenkins use it's own credential.
-From one Jenkins multiple requests can be send simultaneously, the idconnexion provided for each request needs to be unique.
-We can't run more than 10 simultaneous pod and PAM connexions on a Jenkins.
+The goal of this project is to handle unique idconnection number for each request.
+The request to the cyberark's api is launched from a pod that run on Jenkins inside our OpenShift.
+Each instance of Jenkins uses its own credential.
+From one Jenkins multiple requests can be sent simultaneously, the idconnexion provided for each request needs to be unique.
+We can't run more than 10 simultaneous pods and PAM connexions on a Jenkins.
 
 # API Entrypoints
 
@@ -45,15 +45,15 @@ prometheus metrics
 
 # Build
 
-To build the app you need to install go and define your $GOPATH ($GOPATH/src/idcyberark should be the path to the source code)
+To build the app you need to install GO and define $GOPATH ($GOPATH/src/idcyberark should be the path to the source code)
 
 To manage the dependencies this project use [dep](https://github.com/golang/dep)
 
 ```bash
-# to install dep on debian plateforms
+# install dep on debian plateforms
 $ sudo apt-get install go-dep
 
-# to download the dependencies of the project
+# download the dependencies of the project
 $ cd $GOPATH/src/idcyberark
 $ dep ensure -vendor-only
 ```
@@ -86,7 +86,7 @@ Usage:
 You can configure the run with two variables PORT and MAXCOUNTER.
 Default value for PORT is 8000 and MAXCOUNTER is set to 100 by default at runtime.
 
-MAXCOUNTER define the maximum value of the counter's range (1 ..MAXCOUNTER) 
+MAXCOUNTER define the maximum value of the counter's range (1 .. MAXCOUNTER) 
 
 ```bash
 # Exemple
