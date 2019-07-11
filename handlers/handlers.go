@@ -22,6 +22,7 @@ func Router(c *counter.SafeCounter) *mux.Router {
 
 	r := mux.NewRouter()
 	r.HandleFunc("/id/{jenkins}", idcyberark(c)).Methods("GET")
+	r.Handle("/metrics", prometheusHandler())
 	r.HandleFunc("/health", health)
 	r.HandleFunc("/ready", ready(isReady))
 	return r
