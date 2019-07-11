@@ -1,17 +1,20 @@
 # Overview
 
-Projet to handle the idconnection of the request between a pod and the api PAM.
+Cyberark offer an API with PAM to request hosts data in the safe (host type, user, pwd).
+To request informations you need a credential and a unique idconnexion (Number between 1 and 100).
+The request lasts around 1 to 5 seconds, during this time any request with the same credential and idconnexion locks the account for 15 minutes.
 
-Each connexion to PAM needs a unique Id by credential.
-Each Jenkins has his own credential.
+The goal of this projet is to handle unique idconnection number for each request.
+The request to the cyberark's api is launch from a pod that run on Jenkins inside our OpenShift.
+Each instance of Jenkins use it's own credential.
+From one Jenkins multiple requests can be send simultaneously, the idconnexion provided for each request needs to be unique.
+We can't run more than 10 simultaneous pod and PAM connexions on a Jenkins.
 
-The goal of this api is to handle a counter by Jenkins. From an instance of Jenkins you can have multiple requests simultaneously and the Id provided needs to be unique.
-
-# API
+# API Entrypoints
 
 - GET /id/{jenkins}
 
-Get the increment value of the unique id for the Jenkins {jenkins}
+Get the value to use as idconnexion for the Jenkins named :{jenkins}
 
 ``` bash
 $ curl localhost:8080/id/pic-eul
@@ -31,9 +34,9 @@ $ curl localhost:8080/id/pic-eul
 
 healthcheck probe
 
-- GEt /ready
+- GET /ready
 
-readyness probe
+readiness probe
 
 - GET /metrics
 
@@ -42,7 +45,7 @@ prometheus metrics
 
 # Build
 
-To build the app you need to install go and define your $GOPATH ($GOPATH/src/idcyberark should to be valid path).
+To build the app you need to install go and define your $GOPATH ($GOPATH/src/idcyberark should be the path to the source code)
 
 To manage the dependencies this project use [dep](https://github.com/golang/dep)
 
@@ -70,7 +73,7 @@ Usage:
 
   Targets:
 
-    clean       Remove $GOPATH/idcyberark
+    clean       Remove $GOPATH/bin/idcyberark
     build       Build app in $GOPATH/bin
     run         Run app on port: 8000 - check $(PORT)
     test        Launch test
@@ -83,7 +86,7 @@ Usage:
 You can configure the run with two variables PORT and MAXCOUNTER.
 Default value for PORT is 8000 and MAXCOUNTER is set to 100 by default at runtime.
 
-MAXCOUNTER define the maximum value of the range for the counter (1 ..MAXCOUNTER) 
+MAXCOUNTER define the maximum value of the counter's range (1 ..MAXCOUNTER) 
 
 ```bash
 # Exemple
