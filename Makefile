@@ -1,7 +1,7 @@
 GONAME?=$(shell basename "$(PWD)")
-PORT?=8080
-PPORT?=9090
-GPORT?=3000
+PORT?=8080 			# app
+PPORT?=9090 		# prometheus
+GPORT?=3000 		# grafana
 RELEASE?=0.0.1
 COMMIT?=$(shell git rev-parse --short HEAD)
 GOBIN?=$(GOPATH)/bin

@@ -79,7 +79,7 @@ Usage:
     test        Launch test
     container   Build the docker image
     drun        Run docker image on binded port: 8000 - check $(PORT)
-    compose     Run docker-compose (idcybark on port 8080 / prometheus on port 9090)
+    compose     Run docker-compose (idcybark on port 8080 / prometheus on port 9090 / grafana on port 3000)
 ```
 
 # Usage
@@ -92,4 +92,10 @@ MAXCOUNTER define the maximum value of the counter's range (1 .. MAXCOUNTER)
 ```bash
 # Exemple
 $ docker run -p 8080:8080 -e PORT=8080 -e MAXCOUNTER=10 -d jacintod/idcyberark:0.0.1  
+```
+
+With the target compose of the makefile you can launch idcyberark, prometheus and grafana with a predefined dashboard.
+Check vars for port number inside the makefile.
+```bash
+$ make compose
 ```
