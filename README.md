@@ -79,6 +79,7 @@ Usage:
     test        Launch test
     container   Build the docker image
     drun        Run docker image on binded port: 8000 - check $(PORT)
+    compose     Run docker-compose (idcybark on port 8080 / prometheus on port 9090)
 ```
 
 # Usage

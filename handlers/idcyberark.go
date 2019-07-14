@@ -14,6 +14,7 @@ type ResponseIdCyberark struct {
 
 func idcyberark(c *counter.SafeCounter) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+
 		params := mux.Vars(r)
 		idCyberArk := c.Inc(params["jenkins"])
 
@@ -26,6 +27,8 @@ func idcyberark(c *counter.SafeCounter) http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
+		
+		c.Metrics.CounterGauge.WithLabelValues(params["jenkins"]).Set(float64(idCyberArk))
 		
 		w.WriteHeader(http.StatusOK)
 		w.Header().Set("Content-Type", "application/json")

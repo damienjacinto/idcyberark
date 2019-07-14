@@ -12,6 +12,7 @@ import (
 	"idcyberark/handlers"
 	"idcyberark/counter"
 	"idcyberark/version"
+	"github.com/prometheus/client_golang/prometheus"
 )
 
 var (
@@ -26,8 +27,8 @@ func init() {
 	}
 
 	log.Printf(
-		"Starting the service on port %s...\ncommit: %s, build time: %s, release: %s",
-		Port, version.Commit, version.BuildTime, version.Release,
+		"Starting the service on port %s...\ncommit: %s, release: %s",
+		Port, version.Commit, version.Release,
 	)	
 	
 	MaxCounter = counter.MaxCounter
@@ -41,7 +42,11 @@ func init() {
 }
 
 func main() {
+
 	counterSafe := counter.New(MaxCounter)
+
+	counterGaugePrometheus(counterSafe)
+
 	router := handlers.Router(counterSafe)
 
 	interrupt := make(chan os.Signal, 1)
@@ -59,6 +64,23 @@ func main() {
 	gracefullShutdown(srv, interrupt)
 
 	log.Println("Server shutdown")
+}
+
+func counterGaugePrometheus(counterSafe *counter.SafeCounter) {
+	counterSafe.Metrics.CounterGauge = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Namespace: "idcyberark",
+			Name:      "counter_info",
+			Help:      "Value of the last id emitted for the counter",
+		},
+		[]string{"counter_name"},
+	)
+
+	if err := prometheus.Register(counterSafe.Metrics.CounterGauge); err != nil {
+		log.Println("CounterGauge not registered:", err)
+	} else {
+		log.Println("CounterGauge registered.")
+	}
 }
 
 func gracefullShutdown(srv *http.Server, interrupt <-chan os.Signal) {

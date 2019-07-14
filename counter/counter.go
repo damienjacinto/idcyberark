@@ -2,14 +2,20 @@ package counter
 
 import (
 	"sync"
+	"github.com/prometheus/client_golang/prometheus"
 )
 
 const MaxCounter = 100
 
 type SafeCounter struct {
-	v map[string]int
-	mux sync.Mutex
-	max int
+	v 		map[string]int
+	mux 	sync.Mutex
+	max 	int
+	Metrics	Metrics
+}
+
+type Metrics struct {
+    CounterGauge *prometheus.GaugeVec
 }
 
 func New(maxCounter int) *SafeCounter {

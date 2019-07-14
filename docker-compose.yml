@@ -1,0 +1,30 @@
+version: "3.1"  
+services:  
+  prometheus:
+    image: quay.io/prometheus/prometheus:v2.11.1
+    ports:
+     - ${PROMETHEUS_PORT}:${PROMETHEUS_PORT}
+    volumes:
+     - "./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml"
+    environment:
+      - PORT=${PORT}
+
+  grafana:
+    image: grafana/grafana:6.2.5
+    ports:
+    - ${GRAFANA_PORT}:${GRAFANA_PORT}    
+    volumes:
+      - ./grafana/grafana.ini:/etc/grafana/grafana.ini
+      - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./grafana/mydashboards:/var/lib/grafana/dashboards
+    links:
+      - prometheus
+
+  idcyberark:
+    image: ${CONTAINER_IMAGE}:${RELEASE}
+    ports:
+      - ${PORT}:${PORT}
+    environment:
+      - PORT=${PORT}
+    
+    

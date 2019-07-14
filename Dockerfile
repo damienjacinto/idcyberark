@@ -1,6 +1,7 @@
 FROM golang:1.11-alpine as build
 
 ARG VERSION
+ARG COMMIT
 ARG APP
 
 RUN apk add --no-cache git
@@ -13,7 +14,7 @@ RUN dep ensure -vendor-only
 
 COPY . /go/src/${APP}/
 RUN CGO_ENABLED=0 go build \
-    -ldflags "-s -w -X ${APP}/version.Release=${VERSION}" \
+    -ldflags "-s -w -X ${APP}/version.Release=${VERSION} -X ${APP}/version.Commit=${COMMIT}" \
     -o /bin/app
 
 FROM scratch

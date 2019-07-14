@@ -6,6 +6,7 @@ import (
 	"sync/atomic"
 	"idcyberark/counter"
 	"github.com/gorilla/mux"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 // Router register necessary routes and returns an instance of a router.
@@ -22,7 +23,7 @@ func Router(c *counter.SafeCounter) *mux.Router {
 
 	r := mux.NewRouter()
 	r.HandleFunc("/id/{jenkins}", idcyberark(c)).Methods("GET")
-	r.Handle("/metrics", prometheusHandler())
+	r.Handle("/metrics", promhttp.Handler())
 	r.HandleFunc("/health", health)
 	r.HandleFunc("/ready", ready(isReady))
 	return r

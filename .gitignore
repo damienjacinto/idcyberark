@@ -1,3 +1,6 @@
 test
 vendor
 bin
+prometheus/prometheus.yml
+grafana/provisioning/datasources/datasource.yml
+.env
