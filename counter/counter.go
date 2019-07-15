@@ -19,10 +19,21 @@ type Metrics struct {
 }
 
 func New(maxCounter int) *SafeCounter {
-	return &SafeCounter{
+	c := SafeCounter{
 		v: make(map[string]int),
 		max: maxCounter,
 	}
+
+	c.Metrics.CounterGauge = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Namespace: "idcyberark",
+			Name:      "counter_info",
+			Help:      "Value of the last id emitted for the counter",
+		},
+		[]string{"counter_name"},
+	)
+
+	return &c
 }
 
 func (c *SafeCounter) Inc(key string) int {

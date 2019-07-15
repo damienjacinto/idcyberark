@@ -67,14 +67,6 @@ func main() {
 }
 
 func counterGaugePrometheus(counterSafe *counter.SafeCounter) {
-	counterSafe.Metrics.CounterGauge = prometheus.NewGaugeVec(
-		prometheus.GaugeOpts{
-			Namespace: "idcyberark",
-			Name:      "counter_info",
-			Help:      "Value of the last id emitted for the counter",
-		},
-		[]string{"counter_name"},
-	)
 
 	if err := prometheus.Register(counterSafe.Metrics.CounterGauge); err != nil {
 		log.Println("CounterGauge not registered:", err)

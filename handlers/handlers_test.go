@@ -9,6 +9,7 @@ import (
 
 func TestRouter(t *testing.T) {
 	c := counter.New(counter.MaxCounter)
+
 	r := Router(c)
 	ts := httptest.NewServer(r)
 	defer ts.Close()
