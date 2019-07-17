@@ -1,22 +1,22 @@
 package main
 
 import (
-	"time"
+	"context"
+	"github.com/prometheus/client_golang/prometheus"
+	"idcyberark/counter"
+	"idcyberark/handlers"
+	"idcyberark/version"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
-	"syscall"
-	"context"
 	"strconv"
-	"idcyberark/handlers"
-	"idcyberark/counter"
-	"idcyberark/version"
-	"github.com/prometheus/client_golang/prometheus"
+	"syscall"
+	"time"
 )
 
 var (
-	Port string = ""
+	Port       string = ""
 	MaxCounter int
 )
 
@@ -29,12 +29,12 @@ func init() {
 	log.Printf(
 		"Starting the service on port %s...\ncommit: %s, release: %s",
 		Port, version.Commit, version.Release,
-	)	
-	
+	)
+
 	MaxCounter = counter.MaxCounter
 	maxCounterEnv := os.Getenv("MAXCOUNTER")
 	maxCounterInt, err := strconv.Atoi(maxCounterEnv)
-	if (err == nil && maxCounterInt > 0) {
+	if err == nil && maxCounterInt > 0 {
 		MaxCounter = maxCounterInt
 	}
 
@@ -56,11 +56,11 @@ func main() {
 		Addr:    ":" + Port,
 		Handler: router,
 	}
-	
+
 	go func() {
 		log.Fatal(srv.ListenAndServe())
 	}()
-		
+
 	gracefullShutdown(srv, interrupt)
 
 	log.Println("Server shutdown")
@@ -79,14 +79,14 @@ func gracefullShutdown(srv *http.Server, interrupt <-chan os.Signal) {
 	killSignal := <-interrupt
 	log.Print("The service is shutting down...")
 	switch killSignal {
-		case os.Kill:
-			log.Print("Got SIGKILL...")
-		case os.Interrupt:
-			log.Print("Got SIGINT...")
-		case syscall.SIGTERM:
-			log.Print("Got SIGTERM...")
+	case os.Kill:
+		log.Print("Got SIGKILL...")
+	case os.Interrupt:
+		log.Print("Got SIGINT...")
+	case syscall.SIGTERM:
+		log.Print("Got SIGTERM...")
 	}
-	
+
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	if err := srv.Shutdown(ctx); err != nil {

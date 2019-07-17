@@ -1,10 +1,10 @@
 package handlers
 
 import (
+	"idcyberark/counter"
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"idcyberark/counter"
 )
 
 func TestRouter(t *testing.T) {

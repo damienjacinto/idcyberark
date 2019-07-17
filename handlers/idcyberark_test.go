@@ -1,11 +1,11 @@
 package handlers
 
 import (
+	"idcyberark/counter"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"idcyberark/counter"
 )
 
 func TestIdcyberark(t *testing.T) {
@@ -19,10 +19,10 @@ func TestIdcyberark(t *testing.T) {
 
 	if have, want := resp.StatusCode, http.StatusOK; have != want {
 		t.Errorf("Status code is wrong. Have: %d, want: %d.", have, want)
-	}	
+	}
 
 	if have, want := string(body), "{\"id\":1}"; have != want {
 		t.Errorf("Result call /id/{jenkins} failed. Have: %s, want: %s.", have, want)
 	}
-	
+
 }

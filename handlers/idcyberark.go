@@ -1,15 +1,15 @@
 package handlers
 
 import (
+	"encoding/json"
+	"github.com/gorilla/mux"
+	"idcyberark/counter"
 	"log"
 	"net/http"
-	"encoding/json"
-	"idcyberark/counter"
-	"github.com/gorilla/mux"
 )
 
 type ResponseIdCyberark struct {
-    Id   int `json:"id"`
+	Id int `json:"id"`
 }
 
 func idcyberark(c *counter.SafeCounter) http.HandlerFunc {
@@ -27,9 +27,9 @@ func idcyberark(c *counter.SafeCounter) http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		
+
 		c.Metrics.CounterGauge.WithLabelValues(params["jenkins"]).Set(float64(idCyberArk))
-		
+
 		w.WriteHeader(http.StatusOK)
 		w.Header().Set("Content-Type", "application/json")
 		w.Write(data)

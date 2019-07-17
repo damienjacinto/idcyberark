@@ -1,12 +1,12 @@
 package handlers
 
 import (
-	"log"
-	"time"
-	"sync/atomic"
-	"idcyberark/counter"
 	"github.com/gorilla/mux"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"idcyberark/counter"
+	"log"
+	"sync/atomic"
+	"time"
 )
 
 // Router register necessary routes and returns an instance of a router.
